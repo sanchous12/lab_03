@@ -62,6 +62,11 @@ show_histogram_text(const auto bins){
 
 }
 
+void svg_line2(size_t X1,size_t Y1,size_t X2,size_t Y2,string stroke,size_t wid,ostream &stream)
+{
+stream<<"<line x1='"<<X1<<"' y1='"<<Y1<<"' x2='"<<X2<<"' y2='"<<Y2<<"' stroke='"<<stroke<<"' stroke-width='"<<wid<<"' stroke-dasharray = '10 10'/>";
+}
+
 void
 svg_begin(double width, double height) {
     cout << "<?xml version='1.0' encoding='UTF-8'?>\n";
@@ -106,16 +111,22 @@ show_histogram_svg(const vector<size_t>& bins) {
     }
     svg_begin(400, 300);
     double top = 0;
+    double top2 =0;
+    svg_line2(top, top, IMAGE_WIDTH, top , "black", 10, cout);
     for (size_t bin : bins) {
+        top += BIN_HEIGHT;
         double bin_width = BLOCK_WIDTH * bin;
         if (max_bin > (MAX_WIDTH/BLOCK_WIDTH))
         {
-            bin_width = MAX_WIDTH * (static_cast<double>(bin) / max_bin);
+            bin_width = (MAX_WIDTH-15) * (static_cast<double>(bin) / max_bin);
         }
         svg_text(TEXT_LEFT, top + TEXT_BASELINE, to_string(bin));
         svg_rect(TEXT_WIDTH, top, bin_width, BIN_HEIGHT, "black", "black");
-        top += BIN_HEIGHT;
 }
+top += 2*BIN_HEIGHT;
+svg_line2(10, top, IMAGE_WIDTH, top , "black", 10, cout);
+svg_line2(top2, top2, top2, top , "black", 10, cout);
+svg_line2(IMAGE_WIDTH, top2, IMAGE_WIDTH, top , "black", 10, cout);
     svg_end();
 }
 
